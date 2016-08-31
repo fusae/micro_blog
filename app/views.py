@@ -83,3 +83,9 @@ def login():
         login_user(logined_user, remember=form.remember_me.data)
         flash('Logged in successfully')
         return redirect(request.args.get('next') or url_for('index'))
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
