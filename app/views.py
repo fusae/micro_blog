@@ -80,6 +80,6 @@ def login():
             flash('username or password is invalid', 'error')
             return redirect(url_for('login'))
         logined_user = User(register_user['username'], form.password.data, register_user['email'])
-        login_user(logined_user)
+        login_user(logined_user, remember=form.remember_me.data)
         flash('Logged in successfully')
         return redirect(request.args.get('next') or url_for('index'))
