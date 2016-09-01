@@ -5,8 +5,11 @@
   <h1>Login</h1>
   <form action="{{ url_for('login') }}" method="post">
       {{ form.hidden_tag() }}
+      {{ form.username.label }}
       {{ form.username }}
+      {{ form.password.label }}
       {{ form.password }}
+      {{ form.remember_me.label }}
       {{ form.remember_me }} 
       {{ form.submit }}
   </form>
