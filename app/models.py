@@ -1,6 +1,7 @@
 from app import db
 from config import userCollection
 import hashlib
+from datetime import datetime
 
 class User:
 
@@ -35,11 +36,21 @@ class User:
                 }
         return user
 
-#class Post(db.Model):
-#    id = db.Column(db.Integer, primary_key=True)
-#    body = db.Column(db.String(140))
-#    timestamp = db.Column(db.DateTime)
-#    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-#
-#    def __repr__(self): 
-#        return '<Post %r>' % (self.body)
+class Post:
+
+    def __init__(self, title, body):
+        self.title = title
+        self.body = body
+        self.created_at = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
+        self.blog_id = hashlib.md5(title.encode('utf-8')).hexdigest()
+
+    @property
+    def toDict(self):
+        post = {
+                'title': self.title,
+                'body': self.body,
+                'created_at': self.created_at,
+                'blog_id': self.blog_id
+                }
+        return post
+
