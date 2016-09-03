@@ -5,4 +5,5 @@ SECRET_KEY = 'I will never forget'
 
 database = 'BLOG'
 userCollection = 'user'
+postCollection = 'post'
 

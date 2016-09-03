@@ -1,10 +1,19 @@
 from flask import render_template, flash, redirect, session, url_for, request, g, abort
-from flask_login import login_user, logout_user, current_user, login_required
+from flask_login import login_user, logout_user, current_user
 from app import app, db, lm
-from .forms import LoginForm, RegisterForm
-from .models import User
-from config import userCollection
+from .forms import LoginForm, RegisterForm, BlogForm
+from .models import User, Post
+from config import userCollection, postCollection
 import hashlib
+import functools
+
+def login_required(fn):
+        @functools.wraps(fn)
+        def inner(*args, **kwargs):
+            if session.get('logged_in'):
+                return fn(*args, **kwargs)
+            return redirect(url_for('login', next=request.path))
+        return inner
 
 @app.route('/')
 @app.route('/index')
@@ -71,7 +80,6 @@ def login():
     if request.method == 'GET':
         return render_template('login.html', form=form)
     # login data, we should vaild form data
-    form = LoginForm()
     if form.validate_on_submit():
         username = form.username.data
         password = hashlib.md5(form.password.data.encode('utf-8')).hexdigest() 
@@ -82,10 +90,32 @@ def login():
         logined_user = User(register_user['username'], form.password.data, register_user['email'])
         login_user(logined_user, remember=form.remember_me.data)
         flash('Logged in successfully')
+        session['logged_in'] = True
         return redirect(request.args.get('next') or url_for('index'))
 
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
+    session.clear()
     return redirect(url_for('login'))
+
+@app.route('/create_blog', methods=['GET', 'POST'])
+@login_required
+def create_blog():
+    form = BlogForm()
+    if request.method == 'GET':
+        return render_template('create_blog.html', form=form)
+    # handle post data
+    if form.validate_on_submit():
+        post = Post(form.title.data, form.body.data)
+        flash('post created successfully')
+        post = post.toDict
+        db[postCollection].insert(post) 
+        return redirect(url_for('show_blog', blog_id=post['blog_id']))
+    return abort(400)
+
+@app.route('/blog/<blog_id>')
+def show_blog(blog_id):
+    post = db[postCollection].find_one({'blog_id': blog_id})
+    return render_template('detail.html', post=post)
