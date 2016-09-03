@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+
+<dl>
+    <dt>title</dt>
+    <dd>{{ post['title'] }}</dd>
+    <dt>created at {{ post['created_at'] }}</dt>
+    <dt>content</dt>
+    <dd>{{ post['body'] }}</dd>
+</dl>
+
+{% endblock %}
