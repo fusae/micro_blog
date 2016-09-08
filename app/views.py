@@ -6,6 +6,7 @@ from .models import User, Post
 from config import userCollection, postCollection
 import hashlib
 import functools
+from flask_paginate import Pagination
 
 def login_required(fn):
         @functools.wraps(fn)
@@ -17,25 +18,20 @@ def login_required(fn):
 
 @app.route('/')
 @app.route('/index')
+@app.route('/index/<int:page>')
 #@login_required
-def index():
-    #user = g.user
-    user = 'fusae'
-    posts = [
-                {
-                    'author': {'nickname': 'John'},
-                    'body': 'Beautiful day in Portland!'
-                },
+def index(page=1):
+    
+    per_page = 2
+    posts = getPage(page, per_page, postCollection)
 
-                {
-                    'author': {'nickname': 'Susan'},
-                    'body': 'The Avengers movie was so cool!'
-                },
-            ]
+    total = db[postCollection].count()
+    pagination = Pagination(page=page, per_page=per_page, total=total) 
+    
     return render_template("index.html",
                            title='Home',
-                           user=user,
-                           posts=posts)
+                           posts=posts,
+                           pagination=pagination)
 
 @app.before_request
 def before_request():
@@ -119,3 +115,26 @@ def create_blog():
 def show_blog(blog_id):
     post = db[postCollection].find_one({'blog_id': blog_id})
     return render_template('detail.html', post=post)
+
+
+def getPage(page, per_page, collection):
+    # return a terable page which have per_page documents
+    # page is the page count you want
+    cursor = db[collection].find().sort('_id', -1).limit(per_page)
+
+    if page == 1:
+        return cursor;
+
+    last_id = None
+    for each in cursor:
+        last_id = each['_id'] # get the _id of the last document in the first page
+
+    cursor = None
+    for i in range(page -1): # the first page no count
+        cursor = db[collection].find({'_id': {'$lt': last_id}}).sort('_id', -1).limit(per_page)
+
+        if i == page-1 - 1: # the last page we want
+            return cursor
+
+        for each in cursor:
+            last_id = each['_id'] # get the _id of this page, to find the next page

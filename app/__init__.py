@@ -3,9 +3,11 @@ import os
 from flask_login import LoginManager
 from config import database
 from pymongo import MongoClient
+from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
 app.config.from_object('config')
+Bootstrap(app)
 client = MongoClient()
 db = client[database] # database's name
 
