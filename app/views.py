@@ -3,10 +3,10 @@ from flask_login import login_user, logout_user, current_user
 from app import app, db, lm
 from .forms import LoginForm, RegisterForm, BlogForm
 from .models import User, Post
+from .pagination import Pagination
 from config import userCollection, postCollection
 import hashlib
 import functools
-from flask_paginate import Pagination
 
 def login_required(fn):
         @functools.wraps(fn)
@@ -18,15 +18,17 @@ def login_required(fn):
 
 @app.route('/')
 @app.route('/index')
-@app.route('/index/<int:page>')
+#@app.route('/index/<int:page>')
 #@login_required
-def index(page=1):
+#def index(page=1):
+def index():
     
+    page = 1 if not request.args.get('page') else int(request.args.get('page'))
     per_page = 2
-    posts = getPage(page, per_page, postCollection)
 
     total = db[postCollection].count()
-    pagination = Pagination(page=page, per_page=per_page, total=total) 
+    pagination = Pagination(page, per_page, total, postCollection) 
+    posts = pagination.getPage()
     
     return render_template("index.html",
                            title='Home',
@@ -104,37 +106,45 @@ def create_blog():
         return render_template('create_blog.html', form=form)
     # handle post data
     if form.validate_on_submit():
-        post = Post(form.title.data, form.body.data)
+        post = Post(form.title.data, form.abstract.data, form.body.data)
         flash('post created successfully')
         post = post.toDict
         db[postCollection].insert(post) 
         return redirect(url_for('show_blog', blog_id=post['blog_id']))
     return abort(400)
 
-@app.route('/blog/<blog_id>')
-def show_blog(blog_id):
+@app.route('/blog')
+def show_blog():
+    blog_id = request.args.get('blog_id')
     post = db[postCollection].find_one({'blog_id': blog_id})
-    return render_template('detail.html', post=post)
+    return render_template('post.html', post=post)
 
 
-def getPage(page, per_page, collection):
-    # return a terable page which have per_page documents
-    # page is the page count you want
-    cursor = db[collection].find().sort('_id', -1).limit(per_page)
+@app.route('/edit', methods=['GET', 'POST'])
+def edit_blog():
+    form = BlogForm()
+    blog_id = request.args.get('blog_id')
+    post = db[postCollection].find_one({'blog_id': blog_id})
+#    form.title.data = post['title']
+    form.abstract.data = post['abstract']
+    form.body.data = post['body']
 
-    if page == 1:
-        return cursor;
+    if request.method == 'GET':
+        return render_template('edit.html', form=form, post=post)
 
-    last_id = None
-    for each in cursor:
-        last_id = each['_id'] # get the _id of the last document in the first page
+    #if form.validate_on_submit():
+    if request.method == 'POST':
+        #edit_post = Post(form.title.data, form.abstract.data, form.body.data)
+        edit_post = Post(
+                    request.form.get('title'),
+                    request.form.get('abstract'),
+                    request.form.get('body')
+                )
+        edit_post = edit_post.toDict
+        print(edit_post)
+        edit_post['created_at'] = post['created_at']
+        edit_post['blog_id'] = post['blog_id']
+        db[postCollection].update({'blog_id': blog_id}, {'$set': edit_post}, upsert=False)
+        return redirect(url_for('show_blog', blog_id=blog_id))
 
-    cursor = None
-    for i in range(page -1): # the first page no count
-        cursor = db[collection].find({'_id': {'$lt': last_id}}).sort('_id', -1).limit(per_page)
-
-        if i == page-1 - 1: # the last page we want
-            return cursor
-
-        for each in cursor:
-            last_id = each['_id'] # get the _id of this page, to find the next page
+    return abort(400)

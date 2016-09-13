@@ -9,11 +9,12 @@ class RegisterForm(Form):
     submit = SubmitField('submit')
 
 class LoginForm(Form):
-    username = TextField('username', validators=[DataRequired('Please enter your user name')])
-    password = PasswordField('password', validators=[DataRequired('Please enter your password')])
-    remember_me = BooleanField('remember_me', default=False)
+    username = TextField('Username', validators=[DataRequired('Please enter your user name')])
+    password = PasswordField('Password', validators=[DataRequired('Please enter your password')])
+    remember_me = BooleanField('Remember me', default=False)
     submit = SubmitField('submit')
 
 class BlogForm(Form):
     title = StringField('title', validators=[DataRequired('Title can not be empty')])
+    abstract = TextAreaField('abstract')
     body = TextAreaField('body', validators=[DataRequired('Body can not be empty')])
