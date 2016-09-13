@@ -1,7 +1,37 @@
 {% extends "base.html" %}
 {% block content %}
-    <h1>Hi, {{ user.nickname }}!</h1>
-    {% for post in posts %}
-    <div><p>{{ post.author.nickname }} says: <b>{{ post.body }}</b></p></div>
-    {% endfor %}
+
+<div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                {% for post in posts %}
+                    <div class="post-preview">
+                        <a href="{{ url_for('show_blog', blog_id=post['blog_id']) }}">
+                            <h2 class="post-title">
+                                {{ post['title'] }}
+                            </h2>
+                            <h3 class="post-subtitle">
+                                {{ post['abstract'] }}
+                            </h3>
+                        </a>
+                        <p class="post-meta">Posted by <a href="#">Start Bootstrap</a> on {{ post['created_at'] }}</p>
+                    </div>
+                    <hr>
+                {% endfor %}
+                <!-- Pager -->
+                <ul class="pager">
+                    {% if pagination.has_prev %}
+                        <li class="previous">
+                            <a href="{{ url_for('index', page=pagination.prev_page) }}">Newer Posts &larr;</a>
+                        </li>
+                    {% endif %}
+                    {% if pagination.has_next %}
+                        <li class="next">
+                            <a href="{{ url_for('index', page=pagination.next_page) }}">Older Posts &rarr;</a>
+                        </li>
+                    {% endif %}
+                </ul>
+
+                    
+
 {% endblock %}

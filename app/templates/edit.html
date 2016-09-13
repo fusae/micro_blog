@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form method="post" action="{{ url_for('edit_blog', blog_id=post['blog_id']) }}">
+    {{ form.hidden_tag() }}
+    <dl>
+        <dt>Title:</dt>
+        <dd><input id="title" name="title" type="text" value="{{ post['title'] }}"
+        <dt>Abstract:</dt>
+        <dd><textarea id="abstract" name="abstract">{{ post['abstract'] }}</textarea>
+        <dt>Post:</dt>
+        <dd><textarea id="body" name="body">{{ post['body'] }}</textarea>
+    </dl>
+    <p><input type="submit" value="save"/></P>
+    
+</form>
+
+{% endblock %}
