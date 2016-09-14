@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+{% if post %}
+    {% set action = url_for(action, blog_id=post['blog_id']) %}
+{% else %}
+    {% set action = url_for(action) %}
+{% endif %}
+   <form action="{{ action }}" method=post>
+       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+       {% if post %}
+            <dl>
+                <dt>Title:</dt>
+                <dd><input id="title" name="title" type="text" value="{{ post['title'] }}"</dd>
+                <dt>Abstract:</dt>
+                <dd><textarea id="abstract" name="abstract">{{ post['abstract'] }}</textarea>
+                <dt>Post:</dt>
+                <dd><textarea id="body" name="body">{{ post['body'] }}</textarea>
+            </dl>
+       {% else %}
+            <dl>
+                <dt>Title:</dt>
+                <dd><input id="title" name="title" type="text"/></dd>
+                <dt>Abstract:</dt>
+                <dd><textarea id="abstract" name="abstract"></textarea></dd>
+                <dt>Post:</dt>
+                <dd><textarea id="body" name="body"></textarea></dd>
+            </dl>
+       {% endif %}
+       <p><input type="submit" value="save"/></p>
+    </form>
+
+{% endblock %}

@@ -25,7 +25,8 @@
 
       <form class="form-signin" method="post" action="{{ url_for('login') }}">
         <h2 class="form-signin-heading">Please sign in</h2>
-
+                {{ form.hidden_tag() }}
+                {{ form.username }}
 <!--        <label for="inputPassword" class="sr-only">Password</label>-->
                 {{ form.password.label(class_="sr_only", for_="inputPassword") }}
 <!--        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>-->

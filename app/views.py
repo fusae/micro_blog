@@ -98,12 +98,12 @@ def logout():
     session.clear()
     return redirect(url_for('login'))
 
-@app.route('/create_blog', methods=['GET', 'POST'])
+@app.route('/create', methods=['GET', 'POST'])
 @login_required
 def create_blog():
     form = BlogForm()
     if request.method == 'GET':
-        return render_template('create_blog.html', form=form)
+        return render_template('manage_blog.html', action='create_blog')
     # handle post data
     if form.validate_on_submit():
         post = Post(form.title.data, form.abstract.data, form.body.data)
@@ -120,6 +120,7 @@ def show_blog():
     return render_template('post.html', post=post)
 
 
+@login_required
 @app.route('/edit', methods=['GET', 'POST'])
 def edit_blog():
     form = BlogForm()
@@ -130,7 +131,7 @@ def edit_blog():
     form.body.data = post['body']
 
     if request.method == 'GET':
-        return render_template('edit.html', form=form, post=post)
+        return render_template('manage_blog.html', post=post, action='edit_blog')
 
     #if form.validate_on_submit():
     if request.method == 'POST':
@@ -141,10 +142,10 @@ def edit_blog():
                     request.form.get('body')
                 )
         edit_post = edit_post.toDict
-        print(edit_post)
         edit_post['created_at'] = post['created_at']
         edit_post['blog_id'] = post['blog_id']
         db[postCollection].update({'blog_id': blog_id}, {'$set': edit_post}, upsert=False)
         return redirect(url_for('show_blog', blog_id=blog_id))
 
     return abort(400)
+
