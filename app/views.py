@@ -48,11 +48,11 @@ def load_user(id):
     else:
         return None
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
     form = RegisterForm()
     if request.method == 'GET':
-        return render_template('register.html', form=form)
+        return render_template('signup.html', form=form)
     # register data, we should valid form data
     if form.validate_on_submit():
         username = form.username.data
@@ -64,7 +64,7 @@ def register():
         if user:
             # alread exist
             flash('user already exist')
-            return render_template('register.html', form=form)
+            return render_template('signup.html', form=form)
 
         user = User(username, password, email).toDict
         db[userCollection].insert(user)
@@ -72,11 +72,11 @@ def register():
         return redirect(url_for('index'))
     return abort(400);
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
+@app.route('/signin', methods=['GET', 'POST'])
+def signin():
     form = LoginForm()
     if request.method == 'GET':
-        return render_template('login.html', form=form)
+        return render_template('signin.html', form=form)
     # login data, we should vaild form data
     if form.validate_on_submit():
         username = form.username.data

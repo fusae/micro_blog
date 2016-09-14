@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<link href="{{ url_for('static', filename='css/signin.css') }}" rel="stylesheet"/>
+
+    <div class="container">
+        <form class="form-signin" method="post" action="{{ url_for('signup') }}">
+        <h2 class="form-signin-heading">Please sign up</h2>
+                {{ form.hidden_tag() }}
+                {{ form.email(class_="form-control", placeholder="Email") }}
+                {{ form.username(class_="form-control", placeholder="Username") }}
+                {{ form.password(class_="form-control", id="password", placeholder="Password") }}
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+      </form>
+    </div> 
+
+
+{% endblock %}
