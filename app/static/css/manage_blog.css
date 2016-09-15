@@ -1,0 +1,39 @@
+#title,
+#abstract,
+#content{
+    width: 70%;
+}
+
+#entry{
+    font-size: 36px;
+    width: 281px;
+    text-align: right;
+}
+
+
+div.bttn{
+    display: inline-block;
+    background: #333;
+    border: 1px #333 solid;
+    width: 70px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+
+}
+
+div.bttn a{
+    text-decoration: none;
+    color: #ccc;
+}
+
+
+input[type="submit"]{
+    background: none;
+    border: none;
+    color: #ccc;
+}
+
+#cancel{
+    padding-top: 1px;
+}

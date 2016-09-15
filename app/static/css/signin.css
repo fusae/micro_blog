@@ -49,4 +49,12 @@ body {
     position: static;
 }
 
+.btn-submit{
+    background-color: #333;
+    border-color: #333;
+    border-radius: 6px;
+    width: 100%;
+    color: #ccc;
+}
+
 

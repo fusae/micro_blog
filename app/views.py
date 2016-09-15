@@ -13,7 +13,7 @@ def login_required(fn):
         def inner(*args, **kwargs):
             if session.get('logged_in'):
                 return fn(*args, **kwargs)
-            return redirect(url_for('login', next=request.path))
+            return redirect(url_for('signin', next=request.path))
         return inner
 
 @app.route('/')
@@ -84,7 +84,7 @@ def signin():
         register_user = db[userCollection].find_one({'username': username, 'password': password})
         if register_user is None:
             flash('username or password is invalid', 'error')
-            return redirect(url_for('login'))
+            return redirect(url_for('signin'))
         logined_user = User(register_user['username'], form.password.data, register_user['email'])
         login_user(logined_user, remember=form.remember_me.data)
         flash('Logged in successfully')
@@ -96,7 +96,7 @@ def signin():
 def logout():
     logout_user()
     session.clear()
-    return redirect(url_for('login'))
+    return redirect(url_for('signin'))
 
 @app.route('/create', methods=['GET', 'POST'])
 @login_required
@@ -106,7 +106,7 @@ def create_blog():
         return render_template('manage_blog.html', action='create_blog')
     # handle post data
     if form.validate_on_submit():
-        post = Post(form.title.data, form.abstract.data, form.body.data)
+        post = Post(form.title.data, form.abstract.data, form.content.data)
         flash('post created successfully')
         post = post.toDict
         db[postCollection].insert(post) 
@@ -128,18 +128,17 @@ def edit_blog():
     post = db[postCollection].find_one({'blog_id': blog_id})
 #    form.title.data = post['title']
     form.abstract.data = post['abstract']
-    form.body.data = post['body']
+    form.content.data = post['content']
 
     if request.method == 'GET':
         return render_template('manage_blog.html', post=post, action='edit_blog')
 
     #if form.validate_on_submit():
     if request.method == 'POST':
-        #edit_post = Post(form.title.data, form.abstract.data, form.body.data)
         edit_post = Post(
                     request.form.get('title'),
                     request.form.get('abstract'),
-                    request.form.get('body')
+                    request.form.get('content')
                 )
         edit_post = edit_post.toDict
         edit_post['created_at'] = post['created_at']

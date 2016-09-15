@@ -15,4 +15,4 @@ class LoginForm(Form):
 class BlogForm(Form):
     title = StringField('title', validators=[DataRequired('Title can not be empty')])
     abstract = TextAreaField('abstract')
-    body = TextAreaField('body', validators=[DataRequired('Body can not be empty')])
+    content = TextAreaField('content', validators=[DataRequired('Content could not be empty')])

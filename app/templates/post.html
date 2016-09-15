@@ -1,14 +1,25 @@
 {% extends "base.html" %}
-{% block content %}
 
-<dl>
-    <dt>title</dt>
-    <dd>{{ post['title'] }}</dd>
-    <dt>created at {{ post['created_at'] }}</dt>
-    <dt>sub title</dt>
-    <dd>{{ post['abstract'] }}
-    <dt>content</dt>
-    <dd>{{ post['body'] }}</dd>
-</dl>
+{% block content %}
+<!-- Post header -->
+<article>
+    <div class="container">
+        <header>
+
+                        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                            <div class="post-heading">
+                                <h1>{{ post['title'] }}</h1>
+                                <div class="meta">Posted by <a href="#">fusae</a> on {{ post['created_at'] }}</div>
+                                <hr/>
+                            </div>
+                        </div>
+    
+        </header>
+<!-- Post Content -->
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            {{ post['content'] }}
+        </div>
+    </div>
+</article>
 
 {% endblock %}
