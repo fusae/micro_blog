@@ -37,24 +37,22 @@ class User:
         return user
 
 class Post:
-    salt = 'YJY'
-    def __init__(self, title, abstract, content):
+    def __init__(self, title, url_title, abstract, content):
         
         self.title = title
+        self.url_title = url_title
         self.abstract = abstract
         self.content = content
         self.created_at = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
-        # use title and created time to form the hash id
-        self.blog_id = hashlib.md5((Post.salt + self.created_at).encode('utf-8')).hexdigest()
 
     @property
     def toDict(self):
         post = {
                 'title': self.title,
+                'url_title': self.url_title,
                 'abstract': self.abstract,
                 'content': self.content,
                 'created_at': self.created_at,
-                'blog_id': self.blog_id
                 }
         return post
 

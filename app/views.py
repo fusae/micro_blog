@@ -108,17 +108,17 @@ def create_blog():
         return render_template('manage_blog.html', action='create_blog')
     # handle post data
     if form.validate_on_submit():
-        post = Post(form.title.data, form.abstract.data, form.content.data)
+        url_title = form.url_title.data.replace(' ', '-')
+        post = Post(form.title.data, url_title, form.abstract.data, form.content.data)
         flash('post created successfully')
         post = post.toDict
         db[postCollection].insert(post) 
-        return redirect(url_for('show_blog', blog_id=post['blog_id']))
+        return redirect(url_for('show_blog', url_title=post['url_title']))
     return abort(400)
 
-@app.route('/blog')
-def show_blog():
-    blog_id = request.args.get('blog_id')
-    post = db[postCollection].find_one({'blog_id': blog_id})
+@app.route('/blog/<url_title>')
+def show_blog(url_title):
+    post = db[postCollection].find_one({'url_title': url_title})
     content = post['content']
     markdown = mistune.Markdown()
     post['content'] = Markup(markdown(content))
@@ -127,14 +127,10 @@ def show_blog():
 
 
 @login_required
-@app.route('/edit', methods=['GET', 'POST'])
-def edit_blog():
+@app.route('/edit/<url_title>', methods=['GET', 'POST'])
+def edit_blog(url_title):
     form = BlogForm()
-    blog_id = request.args.get('blog_id')
-    post = db[postCollection].find_one({'blog_id': blog_id})
-#    form.title.data = post['title']
-    form.abstract.data = post['abstract']
-    form.content.data = post['content']
+    post = db[postCollection].find_one({'url_title': url_title})
 
     if request.method == 'GET':
         return render_template('manage_blog.html', post=post, action='edit_blog')
@@ -143,14 +139,14 @@ def edit_blog():
     if request.method == 'POST':
         edit_post = Post(
                     request.form.get('title'),
+                    request.form.get('url_title'),
                     request.form.get('abstract'),
                     request.form.get('content')
                 )
         edit_post = edit_post.toDict
         edit_post['created_at'] = post['created_at']
-        edit_post['blog_id'] = post['blog_id']
-        db[postCollection].update({'blog_id': blog_id}, {'$set': edit_post}, upsert=False)
-        return redirect(url_for('show_blog', blog_id=blog_id))
+        db[postCollection].update({'created_at': post['created_at']}, {'$set': edit_post}, upsert=False)
+        return redirect(url_for('show_blog', url_title=edit_post['url_title']))
 
     return abort(400)
 

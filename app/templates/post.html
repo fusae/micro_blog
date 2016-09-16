@@ -11,7 +11,7 @@
                                 <h1>{{ post['title'] }}</h1>
                                 <div class="meta">Posted by <a href="#">fusae</a> on {{ post['created_at'] }}</div>
                                 {% if logged_in %}
-                                <div id="edit_blog"><a href="{{ url_for('edit_blog', blog_id=post['blog_id']) }}">edit</a></div>
+                                <div id="edit_blog"><a href="{{ url_for('edit_blog', url_title=post['url_title']) }}">edit</a></div>
                                 {% endif %}
                                 <hr/>
                             </div>
