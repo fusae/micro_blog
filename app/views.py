@@ -7,6 +7,8 @@ from .pagination import Pagination
 from config import userCollection, postCollection
 import hashlib
 import functools
+import mistune
+from flask import Markup
 
 def login_required(fn):
         @functools.wraps(fn)
@@ -17,14 +19,14 @@ def login_required(fn):
         return inner
 
 @app.route('/')
-@app.route('/index')
+#@app.route('/index')
 #@app.route('/index/<int:page>')
 #@login_required
 #def index(page=1):
 def index():
     
     page = 1 if not request.args.get('page') else int(request.args.get('page'))
-    per_page = 2
+    per_page = 1
 
     total = db[postCollection].count()
     pagination = Pagination(page, per_page, total, postCollection) 
@@ -117,7 +119,11 @@ def create_blog():
 def show_blog():
     blog_id = request.args.get('blog_id')
     post = db[postCollection].find_one({'blog_id': blog_id})
-    return render_template('post.html', post=post)
+    content = post['content']
+    markdown = mistune.Markdown()
+    post['content'] = Markup(markdown(content))
+    logged_in = session['logged_in'] if session.get('logged_in') else False
+    return render_template('post.html', post=post, logged_in=logged_in)
 
 
 @login_required

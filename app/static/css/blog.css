@@ -10,7 +10,9 @@
     }
     
 }
-
+body{
+    overflow-x: hidden; /* 隐藏横向滚动条 */
+}
 .box{
     display: inline-block;
     height: 50px;
@@ -24,7 +26,7 @@
     color: #ccc;
 }
 
-.box a li:hover{
+.box a:hover{
     text-decoration: none;
 }
 
@@ -55,6 +57,13 @@ body{
 
 footer a{
     color: #333;
+}
+
+#edit_blog{
+    text-align: right;
+}
+#edit_blog a{
+    text-decoration: none;
 }
 
 /* navbar */
