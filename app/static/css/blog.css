@@ -39,7 +39,7 @@ body{
     padding: 0;
 }
 
-.post-preview a{
+.post-heading a{
     text-decoration: none;
 }
 
@@ -47,22 +47,21 @@ body{
     font-size: 42px;
 }
 
-.post-heading div.meta{
+.post-heading p.post-meta{
     text-align: right;
+    border-top: 1px #ccc solid;
+    border-bottom: 1px #ccc solid;
 }
 
-.post-heading hr{
-    border-top: 1px #333 solid;
+.post-abstract{
+    font-size: 20px;
 }
 
 footer a{
     color: #333;
 }
 
-#edit_blog{
-    text-align: right;
-}
-#edit_blog a{
+.edit_blog a{
     text-decoration: none;
 }
 

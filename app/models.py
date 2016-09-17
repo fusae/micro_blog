@@ -37,10 +37,11 @@ class User:
         return user
 
 class Post:
-    def __init__(self, title, url_title, abstract, content):
+    def __init__(self, title, url_title, tags, abstract, content):
         
         self.title = title
         self.url_title = url_title
+        self.tags = tags
         self.abstract = abstract
         self.content = content
         self.created_at = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
@@ -50,6 +51,7 @@ class Post:
         post = {
                 'title': self.title,
                 'url_title': self.url_title,
+                'tags': self.tags,
                 'abstract': self.abstract,
                 'content': self.content,
                 'created_at': self.created_at,

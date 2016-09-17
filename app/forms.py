@@ -15,5 +15,6 @@ class LoginForm(Form):
 class BlogForm(Form):
     title = StringField('title', validators=[DataRequired('Title can not be empty')])
     url_title = StringField('url_title', validators=[DataRequired('URL_Title can not be empty')])
+    tags = StringField('tags')
     abstract = TextAreaField('abstract')
     content = TextAreaField('content', validators=[DataRequired('Content could not be empty')])

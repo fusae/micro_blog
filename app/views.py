@@ -26,7 +26,7 @@ def login_required(fn):
 def index():
     
     page = 1 if not request.args.get('page') else int(request.args.get('page'))
-    per_page = 1
+    per_page = 5
 
     total = db[postCollection].count()
     pagination = Pagination(page, per_page, total, postCollection) 
@@ -36,6 +36,12 @@ def index():
                            title='Home',
                            posts=posts,
                            pagination=pagination)
+
+@app.route('/blog/tags/<tag>')
+def show_tag(tag):
+    per_page = 5;
+    page = 1;
+    pass
 
 @app.before_request
 def before_request():
@@ -109,7 +115,8 @@ def create_blog():
     # handle post data
     if form.validate_on_submit():
         url_title = form.url_title.data.replace(' ', '-')
-        post = Post(form.title.data, url_title, form.abstract.data, form.content.data)
+        tags = [each.strip() for each in (form.tags.data).split(',')]
+        post = Post(form.title.data, url_title, tags, form.abstract.data, form.content.data)
         flash('post created successfully')
         post = post.toDict
         db[postCollection].insert(post) 
@@ -126,20 +133,27 @@ def show_blog(url_title):
     return render_template('post.html', post=post, logged_in=logged_in)
 
 
-@login_required
 @app.route('/edit/<url_title>', methods=['GET', 'POST'])
+@login_required
 def edit_blog(url_title):
     form = BlogForm()
     post = db[postCollection].find_one({'url_title': url_title})
 
     if request.method == 'GET':
+        tags = post['tags']
+        tags = str(tags) # str
+        tags = tags[1:len(tags)-1] #remove '[' and ']'
+        tags = tags.replace("'",'') # remove "'"
+        post['tags'] = tags
         return render_template('manage_blog.html', post=post, action='edit_blog')
 
     #if form.validate_on_submit():
     if request.method == 'POST':
+        tags = [each.strip() for each in (form.tags.data).split(',')]
         edit_post = Post(
                     request.form.get('title'),
                     request.form.get('url_title'),
+                    tags,
                     request.form.get('abstract'),
                     request.form.get('content')
                 )
@@ -149,4 +163,25 @@ def edit_blog(url_title):
         return redirect(url_for('show_blog', url_title=edit_post['url_title']))
 
     return abort(400)
+
+@app.route('/manage/post')
+@app.route('/manage/post/delete/<url_title>')
+@login_required
+def manage_post(url_title=None):
+    rule = request.url_rule
+    if 'delete' in rule.rule:
+        db[postCollection].delete_one({'url_title': url_title})
+        return redirect(url_for('manage_post'))
+    else:
+
+        page = 1 if not request.args.get('page') else int(request.args.get('page'))
+        per_page = 10
+
+        total = db[postCollection].count()
+        pagination = Pagination(page, per_page, total, postCollection) 
+        posts = pagination.getPage()
+        
+        return render_template("manage_post.html",
+                               posts=posts,
+                               pagination=pagination)
 
