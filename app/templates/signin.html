@@ -5,11 +5,12 @@
 <link href="{{ url_for('static', filename='css/signin.css') }}" rel="stylesheet"/>
 {% endblock %}
 
+
 {% block content %}
 
     <div class="container">
 
-      <form class="form-signin" method="post" action="{{ url_for('signin') }}">
+      <form class="form-signin" method="post" action="{{ url_for('signin', next=next_url) }}">
         <h2 class="form-signin-heading">Please sign in</h2>
                 {{ form.hidden_tag() }}
                 {{ form.username(class_="form-control", placeholder="Username") }}

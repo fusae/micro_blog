@@ -83,8 +83,10 @@ def signup():
 @app.route('/signin', methods=['GET', 'POST'])
 def signin():
     form = LoginForm()
+    next_url = request.args.get('next') or request.form.get('next')
+
     if request.method == 'GET':
-        return render_template('signin.html', form=form)
+        return render_template('signin.html', form=form, next_url=next_url)
     # login data, we should vaild form data
     if form.validate_on_submit():
         username = form.username.data
@@ -97,7 +99,7 @@ def signin():
         login_user(logined_user, remember=form.remember_me.data)
         flash('Logged in successfully')
         session['logged_in'] = True
-        return redirect(request.args.get('next') or url_for('index'))
+        return redirect(next_url or url_for('index'))
 
 @app.route('/logout')
 @login_required
