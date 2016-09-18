@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <h2>User Management</h2>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Time</th>
+                <th>Operation</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user['username'] }}</td>
+                <td>{{ user['email'] }}</td>
+                <td>{{ user['created_at'] }}</td>
+                <td>
+                    <a href="{{ url_for('manage_user', email=user['email']) }}" onclick="return confirm('Confirm delete')">delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <!-- Pager -->
+    <ul class="pager">
+    {% if pagination.has_prev %}
+        <li class="previous">
+            <a href="{{ url_for('manage_post', page=pagination.prev_page) }}">Newer Users &larr;</a>
+        </li>
+    {% endif %}
+    {% if pagination.has_next %}
+        <li class="next">
+            <a href="{{ url_for('manage_post', page=pagination.next_page) }}">Older Users &rarr;</a>
+        </li>
+    {% endif %}
+    </ul>
+</div> 
+
+{% endblock %}

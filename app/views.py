@@ -187,3 +187,24 @@ def manage_post(url_title=None):
                                posts=posts,
                                pagination=pagination)
 
+@app.route('/manage/user')
+@app.route('/manage/user/delete/<email>')
+@login_required
+def manage_user(email=None):
+    rule = request.url_rule
+    if 'delete' in rule.rule:
+        db[userCollection].delete_one({'email': email})
+        return redirect(url_for('manage_user'))
+    else:
+
+        page = 1 if not request.args.get('page') else int(request.args.get('page'))
+        per_page = 10
+
+        total = db[userCollection].count()
+        pagination = Pagination(page, per_page, total, userCollection) 
+        users = pagination.getPage()
+        
+        return render_template("manage_user.html",
+                               users=users,
+                               pagination=pagination)
+

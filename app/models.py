@@ -9,6 +9,7 @@ class User:
         self.username = username
         self.password = password
         self.email = email
+        self.created_at = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
 
     @property
     def is_authenticated(self):
@@ -32,7 +33,8 @@ class User:
         user = {
                 'username': self.username,
                 'password': self.password,
-                'email': self.email
+                'email': self.email,
+                'created_at': self.created_at
                 }
         return user
 
