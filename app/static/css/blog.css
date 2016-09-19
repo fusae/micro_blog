@@ -74,6 +74,11 @@ footer a{
     text-decoration: none;
 }
 
+label{
+    text-align: right;
+}
+
+
 /* navbar */
 .navbar-default {
     background-color: #333;

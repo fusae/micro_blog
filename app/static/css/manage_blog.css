@@ -2,7 +2,10 @@
 #url_title,
 #tags,
 #abstract,
-#content{
+#content,
+#name,
+#email,
+#message{
     width: 70%;
 }
 
@@ -36,6 +39,7 @@ input[type="submit"]{
     color: #ccc;
 }
 
-#cancel{
+#cancel,
+#cancel_ano{
     padding-top: 1px;
 }

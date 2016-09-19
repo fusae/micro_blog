@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, session, url_for, request, g, abort
 from flask_login import login_user, logout_user, current_user
-from app import app, db, lm
+from app import app, db, lm, mail
 from .forms import LoginForm, RegisterForm, BlogForm
 from .models import User, Post
 from .pagination import Pagination
@@ -9,6 +9,7 @@ import hashlib
 import functools
 import mistune
 from flask import Markup
+from flask_mail import Message
 
 def login_required(fn):
         @functools.wraps(fn)
@@ -215,3 +216,19 @@ def show_tag(tag):
     pagination = Pagination(page, per_page, count, postCollection)
 
     return render_template('show_tag.html', posts=posts, pagination=pagination, TAG=tag)
+
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+    if request.method == 'GET':
+        return render_template('contact.html')
+    
+    name = request.form.get('name');
+    email = request.form.get('email');
+    message = request.form.get('message');
+    msg = Message(
+            subject=name,
+            body='<{}> '.format(email) + message,
+            recipients=['fusae_js@163.com']
+            )
+    mail.send(msg)
+    return redirect(url_for('index'))
