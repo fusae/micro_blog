@@ -17,7 +17,7 @@
                             {{ post['created_at'] }}
                             <span class="separator">/</span>
                             {% for tag in post['tags'] %}
-                                <a href="#">{{ tag }}</a>
+                                <a href="{{ url_for('show_tag', tag=tag) }}">{{ tag }}</a>
                             {% endfor %}
                             <span class="separator">/</span>
                         </p>
@@ -42,6 +42,7 @@
                     {% endif %}
                 </ul>
 
-                    
-
+            </div>
+    </div>
+</div>
 {% endblock %}

@@ -37,11 +37,6 @@ def index():
                            posts=posts,
                            pagination=pagination)
 
-@app.route('/blog/tags/<tag>')
-def show_tag(tag):
-    per_page = 5;
-    page = 1;
-    pass
 
 @app.before_request
 def before_request():
@@ -208,3 +203,15 @@ def manage_user(email=None):
                                users=users,
                                pagination=pagination)
 
+@app.route('/blog/tags/<tag>')
+def show_tag(tag):
+    posts = db[postCollection].find({'tags': {'$in': [tag]}}).sort('_id', -1)
+    count = posts.count()
+    if count == 0:
+        return render_template('show_tag.html')
+    page = 1 if not request.args.get('page') else int(request.args.get('page'))
+    per_page = 5
+    posts = posts.skip(page-1).limit(per_page) # replace getPage() function in Pagination class
+    pagination = Pagination(page, per_page, count, postCollection)
+
+    return render_template('show_tag.html', posts=posts, pagination=pagination, TAG=tag)

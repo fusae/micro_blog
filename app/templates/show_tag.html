@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                {% if posts %}
+                    {% for post in posts %}
+                        <div class="post-heading">
+                            <a href="{{ url_for('show_blog', url_title=post['url_title']) }}">
+                                <h2 class="post-title">
+                                    {{ post['title'] }}
+                                </h2>
+                            </a>  
+                            <p class="post-meta">
+                                {{ post['created_at'] }}
+                                <span class="separator">/</span>
+                                {% for tag in post['tags'] %}
+                                    <a href="{{ url_for('show_tag', tag=tag) }}">{{ tag }}</a>
+                                {% endfor %}
+                                <span class="separator">/</span>
+                            </p>
+                            <p class="post-abstract">
+                                {{ post['abstract'] }}
+                            </p>
+
+                        </div>
+                        <hr>
+                    {% endfor %}
+                    <!-- Pager -->
+                    <ul class="pager">
+                        {% if pagination.has_prev %}
+                            <li class="previous">
+                                <a href="{{ url_for('show_tag', tag=TAG, page=pagination.prev_page) }}">Newer Posts &larr;</a>
+                            </li>
+                        {% endif %}
+                        {% if pagination.has_next %}
+                            <li class="next">
+                                <a href="{{ url_for('show_tag', tag=TAG, page=pagination.next_page) }}">Older Posts &rarr;</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                
+                {% else %}
+                <strong>Can't not found any matched posts</strong>
+                {% endif %}
+            </div>
+    </div>
+</div>
+                    
+
+{% endblock %}

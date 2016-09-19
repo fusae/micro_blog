@@ -30,12 +30,12 @@
     <ul class="pager">
     {% if pagination.has_prev %}
         <li class="previous">
-            <a href="{{ url_for('manage_post', page=pagination.prev_page) }}">Newer Users &larr;</a>
+            <a href="{{ url_for('manage_user', page=pagination.prev_page) }}">Newer Users &larr;</a>
         </li>
     {% endif %}
     {% if pagination.has_next %}
         <li class="next">
-            <a href="{{ url_for('manage_post', page=pagination.next_page) }}">Older Users &rarr;</a>
+            <a href="{{ url_for('manage_user', page=pagination.next_page) }}">Older Users &rarr;</a>
         </li>
     {% endif %}
     </ul>
