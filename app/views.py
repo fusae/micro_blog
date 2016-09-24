@@ -232,3 +232,9 @@ def contact():
             )
     mail.send(msg)
     return redirect(url_for('index'))
+
+@app.route('/search')
+def search():
+    keyword = request.args.get('keyword')
+    if keyword == 'secret':
+        return redirect(url_for('signin'))
