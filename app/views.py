@@ -209,13 +209,13 @@ def show_tag(tag):
     posts = db[postCollection].find({'tags': {'$in': [tag]}}).sort('_id', -1)
     count = posts.count()
     if count == 0:
-        return render_template('show_tag.html')
+        return render_template('tag_or_search.html')
     page = 1 if not request.args.get('page') else int(request.args.get('page'))
     per_page = 5
     posts = posts.skip(page-1).limit(per_page) # replace getPage() function in Pagination class
     pagination = Pagination(page, per_page, count, postCollection)
 
-    return render_template('show_tag.html', posts=posts, pagination=pagination, TAG=tag)
+    return render_template('tag_or_search.html', posts=posts, pagination=pagination, TAG=tag)
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
@@ -238,3 +238,16 @@ def search():
     keyword = request.args.get('keyword')
     if keyword == 'secret':
         return redirect(url_for('signin'))
+
+    # create text index
+    db[postCollection].create_index([('$**', 'text')]) # Indexing the entire document
+    posts = db[postCollection].find({'$text': {'$search': keyword}})
+    count = posts.count()
+    if count == 0:
+        return render_template('tag_or_search.html')
+    page = 1 if not request.args.get('page') else int(request.args.get('page'))
+    per_page = 5
+    posts = posts.skip(page-1).limit(per_page) # replace getPage() function in Pagination class
+    pagination = Pagination(page, per_page, count, postCollection)
+
+    return render_template('tag_or_search.html', posts=posts, pagination=pagination, keyword=keyword)

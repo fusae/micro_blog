@@ -33,12 +33,20 @@
                     <ul class="pager">
                         {% if pagination.has_prev %}
                             <li class="previous">
+                                {% if TAG %}
                                 <a href="{{ url_for('show_tag', tag=TAG, page=pagination.prev_page) }}">Newer Posts &larr;</a>
+                                {% elif keyword %}
+                                <a href="{{ url_for('show_tag', keyword=keyword, page=pagination.prev_page) }}">Newer Posts &larr;</a>
+                                {% endif %}
                             </li>
                         {% endif %}
                         {% if pagination.has_next %}
                             <li class="next">
+                                {% if TAG %}
                                 <a href="{{ url_for('show_tag', tag=TAG, page=pagination.next_page) }}">Older Posts &rarr;</a>
+                                {% elif keyword %}
+                                <a href="{{ url_for('show_tag', keyword=keyword, page=pagination.next_page) }}">Newer Posts &larr;</a>
+                                {% endif %}
                             </li>
                         {% endif %}
                     </ul>
