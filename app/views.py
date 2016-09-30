@@ -67,27 +67,27 @@ def load_user(id):
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    form = RegisterForm()
-    if request.method == 'GET':
-        return render_template('signup.html', form=form)
-    # register data, we should valid form data
-    if form.validate_on_submit():
-        username = form.username.data
-        password = hashlib.md5(form.password.data.encode('utf-8')).hexdigest()
-        email = form.email.data
-
-        # check if the user has registered
-        user = db[userCollection].find_one({'email': email, 'username': username})
-        if user:
-            # alread exist
-            flash('user already exist')
-            return render_template('signup.html', form=form)
-
-        user = User(username, password, email).toDict
-        db[userCollection].insert(user)
-        flash('user successfully registered') 
-        return redirect(url_for('index'))
-    return abort(400);
+#    form = RegisterForm()
+#    if request.method == 'GET':
+#        return render_template('signup.html', form=form)
+#    # register data, we should valid form data
+#    if form.validate_on_submit():
+#        username = form.username.data
+#        password = hashlib.md5(form.password.data.encode('utf-8')).hexdigest()
+#        email = form.email.data
+#
+#        # check if the user has registered
+#        user = db[userCollection].find_one({'email': email, 'username': username})
+#        if user:
+#            # alread exist
+#            flash('user already exist')
+#            return render_template('signup.html', form=form)
+#
+#        user = User(username, password, email).toDict
+#        db[userCollection].insert(user)
+#        flash('user successfully registered') 
+#        return redirect(url_for('index'))
+    return abort(404); # cancel signup function or not, is up to you
 
 @app.route('/signin', methods=['GET', 'POST'])
 def signin():
