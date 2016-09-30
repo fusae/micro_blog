@@ -241,7 +241,7 @@ def contact():
     msg = Message(
             subject=name,
             body='<{}> '.format(email) + message,
-            recipients=['fusae_js@163.com']
+            recipients=['fusae_js@163.com'] # the receiver
             )
     mail.send(msg)
     return redirect(url_for('index'))
