@@ -59,7 +59,7 @@
         <div class=box><a href="/blog"><li>blog</li></a></div>
         <div class=box><a href="https://github.com/fusae/micro_blog" target="_blank"><li>code</li></a></div>
         <div class=box><a href="{{ url_for('contact') }}"><li>contact</li></a></div>
-        <div class=box><a href="#"><li>about</li></a></div>
+        <div class=box><a href="{{ url_for('show_blog', url_title='about-this-blog') }}"><li>about</li></a></div>
       </ul>
       <form class="navbar-form navbar-right" method="get" action="{{ url_for('search') }}" id="search-form">
         <div class="form-group">
