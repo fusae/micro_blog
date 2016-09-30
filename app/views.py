@@ -264,3 +264,4 @@ def search():
     pagination = Pagination(page, per_page, count, postCollection)
 
     return render_template('tag_or_search.html', posts=posts, pagination=pagination, keyword=keyword)
+
