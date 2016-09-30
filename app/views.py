@@ -20,10 +20,6 @@ def login_required(fn):
         return inner
 
 @app.route('/')
-#@app.route('/index')
-#@app.route('/index/<int:page>')
-#@login_required
-#def index(page=1):
 def index():
     
     page = 1 if not request.args.get('page') else int(request.args.get('page'))
@@ -36,7 +32,24 @@ def index():
     return render_template("index.html",
                            title='Home',
                            posts=posts,
-                           pagination=pagination)
+                           pagination=pagination,
+                           blog=False)
+
+@app.route('/blog')
+def blog():
+    
+    page = 1 if not request.args.get('page') else int(request.args.get('page'))
+    per_page = 5
+
+    total = db[postCollection].count()
+    pagination = Pagination(page, per_page, total, postCollection) 
+    posts = pagination.getPage()
+    
+    return render_template("index.html",
+                           title='Home',
+                           posts=posts,
+                           pagination=pagination,
+                           blog=True)
 
 
 @app.before_request

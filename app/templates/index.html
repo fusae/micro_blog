@@ -2,7 +2,15 @@
 
 
 {% block content %}
-
+{% if not blog %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <h3 id="motto">再高的技术也比不上一颗真诚的心</h3>
+        </div>
+    </div>
+</div>
+{% endif %}
 <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">

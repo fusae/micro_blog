@@ -11,6 +11,11 @@
     
 }
 
+#motto{
+    text-align: center;
+    font-size: 32px;
+}
+
 header div.row{
     margin-left: -10px;
     margin-right: -10px;
