@@ -10,11 +10,23 @@
 
     <div class="container">
 
-      <form class="form-signin" method="post" action="{{ url_for('signin', next=next_url) }}">
+      <form class="form-signin" method="post" action="{{ url_for('signin', next=next_url) }}"
+            onsubmit="return validate();">
+          {% with messages = get_flashed_messages() %}
+          {% if messages %}
+          <ul>
+              {% for message in messages %}
+              <li>{{ message }}</li>
+              {% endfor %}
+          </ul>
+          {% endif %}
+          {% endwith %}
         <h2 class="form-signin-heading">Please sign in</h2>
                 {{ form.hidden_tag() }}
-                {{ form.username(class_="form-control", placeholder="Username") }}
-                {{ form.password(class_="form-control", id="password", placeholder="Password") }}
+                {{ form.username(class_="form-control", placeholder="Username", onfocus="removeTips(this)") }}
+          <span id="usr"></span>
+                {{ form.password(class_="form-control", id="password", placeholder="Password", onfocus="removeTips(this)") }}
+          <span id="pwd"></span>
         <div class="checkbox">
             <label>
                 {{ form.remember_me(id="check_box") }} Remember me
@@ -25,4 +37,8 @@
 
     </div> <!-- /container -->
 
+{% endblock %}
+
+{% block js %}
+ <script src="{{ url_for('static', filename='js/signin.js') }}"></script>
 {% endblock %}

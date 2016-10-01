@@ -43,3 +43,12 @@ input[type="submit"]{
 #cancel_ano{
     padding-top: 1px;
 }
+
+
+ul{
+    padding-left: 0;   
+}
+li{
+    list-style-type: none;
+    color: red;
+}

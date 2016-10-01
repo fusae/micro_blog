@@ -56,4 +56,11 @@ body {
     color: #ccc;
 }
 
+ul{
+    padding-left: 0;   
+}
+li{
+    list-style-type: none;
+    color: red;
+}
 

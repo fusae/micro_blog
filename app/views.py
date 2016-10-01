@@ -126,9 +126,11 @@ def create_blog():
     # handle post data
     if form.validate_on_submit():
         url_title = form.url_title.data.replace(' ', '-')
+        if (db[postCollection].find_one({'url_title': url_title})): # can find url_title in db, that means repeat
+            flash('URL_Title already exist', 'error')
+            return redirect(url_for('create_blog'))
         tags = [each.strip() for each in (form.tags.data).split(',')]
         post = Post(form.title.data, url_title, tags, form.abstract.data, form.content.data)
-        flash('post created successfully')
         post = post.toDict
         db[postCollection].insert(post) 
         return redirect(url_for('show_blog', url_title=post['url_title']))

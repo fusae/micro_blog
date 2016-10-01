@@ -14,15 +14,26 @@
 {% endif %}
 <hr/>
 <div class="container">
-   <form action="{{ action }}" method=post class="form-horizontal">
+    {% with messages = get_flashed_messages() %}
+          {% if messages %}
+          <ul>
+              {% for message in messages %}
+              <li>{{ message }}</li>
+              {% endfor %}
+          </ul>
+          {% endif %}
+          {% endwith %}
+   <form action="{{ action }}" method=post class="form-horizontal" onsubmit="return validate();">
        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <div class="form-group">
               <label for="title" class="col-sm-2 col-form-label">Title</label>
               <div class="col-sm-10">
                 {% if post %}
-                <input class="form-control" id="title" name="title" type="text" value="{{ post['title'] }}">
+                <input class="form-control" id="title" name="title" type="text" value="{{ post['title'] }}" onfocus="removeTips(this)"/>
+                  <span id="e_title"></span>
                 {% else %}
-                <input class="form-control" id="title" name="title" type="text"/>
+                <input class="form-control" id="title" name="title" type="text" onfocus="removeTips(this)"/>
+                  <span id="e_title"></span>
                 {% endif %}
               </div>
             </div>
@@ -33,7 +44,8 @@
                 {% if post %}
                 <input class="form-control" id="url_title" name="url_title" type="text" value="{{ post['url_title'] }}" readonly="readonly">
                 {% else %}
-                <input class="form-control" id="url_title" name="url_title" type="text"/>
+                  <input class="form-control" id="url_title" name="url_title" type="text" onfocus="removeTips(this)"/>
+                  <span id="e_url_title"></span>
                 {% endif %}
               </div>
             </div>
@@ -42,9 +54,11 @@
               <label for="tags" class="col-sm-2 col-form-label">Tags</label>
               <div class="col-sm-10">
                 {% if post %}
-                <input class="form-control" id="tags" name="tags" type="text" value="{{ post['tags'] }}">
+                <input class="form-control" id="tags" name="tags" type="text" value="{{ post['tags'] }}" onfocus="removeTips(this)"/>
+                  <span id="e_tags"></span>
                 {% else %}
-                <input class="form-control" id="tags" name="tags" type="text"/>
+                <input class="form-control" id="tags" name="tags" type="text" onfocus="removeTips(this)"/>
+                  <span id="e_tags"></span>
                 {% endif %}
               </div>
             </div>
@@ -64,9 +78,11 @@
               <label for="Content" class="col-sm-2 col-form-label">Content</label>
               <div class="col-sm-10">
                 {% if post %}
-                <textarea class="form-control" id="content" name="content" style="height: 300px;">{{ post['content'] }}</textarea>
+                <textarea class="form-control" id="content" name="content" style="height: 300px;" onfocus="removeTips(this)">{{ post['content'] }}</textarea>
+                  <span id="e_content"></span>
                 {% else %}
-                <textarea class="form-tontrol" id="content" name="content" style="height: 300px;"></textarea>
+                <textarea class="form-tontrol" id="content" name="content" style="height: 300px;" onfocus="removeTips(this)"></textarea>
+                  <span id="e_content"></span>
                 {% endif %}
               </div>
             </div>
@@ -90,4 +106,8 @@
     </form>
 </div>
 
+{% endblock %}
+
+{% block js %}
+<script src="{{ url_for('static', filename='js/manage_blog.js') }}"></script>
 {% endblock %}
